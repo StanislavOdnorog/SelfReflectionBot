@@ -17,6 +17,8 @@ openai.api_key = os.environ.get("OPENAI_API_KEY", default=None)
 bot = Bot(bot_api_key)
 dp = Dispatcher(bot)
 
+commands = ['start', 'delete', 'download', 'specialist']
+
 @dp.message_handler(commands=['delete'])
 async def process_delete_command(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'w') as f:
@@ -42,9 +44,7 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler()
 async def process_other_messages(message: types.Message):
-
-        
-    
+  
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         f.write(message.text + "\n\n")
         
@@ -54,10 +54,11 @@ async def process_other_messages(message: types.Message):
             logs += line
             
     with open("./logs/" + str(message.from_user.id), 'a') as f:
-        ai_message = await generate_response("НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!! Поддержи человека в любой ситуации не используя формальные термины. Будь как друг, но не отклоняйся от темы помощи (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!). Ты мужчина. Помогай советуй и поддерживай, а не отправляй к специалисту в любой ситуации. Иногда можешь попросить человека продолжить мысль, если не совсем понял его. Будь проще, не заставляй человека очень нервничать. (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!) Вот лог переписки и последнее сообщение, ответь ТОЛЬКО НА ПОСЛЕДНЕЕ СООБЩЕНИЕ: " + logs)
-        f.write(ai_message.choices[0].message.content + "\n\n")
-        if message.text.startswith('/'):
+        if any(word in message.text for word in commands):
             ai_message = await generate_response("Кратко напиши как психолог и друг, что желаешь человеку всего лучшего (10-20 слов)")
+        else:
+            ai_message = await generate_response("НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!! Поддержи человека в любой ситуации не используя формальные термины. Будь как друг, но не отклоняйся от темы помощи (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!). Ты мужчина. Помогай советуй и поддерживай, а не отправляй к специалисту в любой ситуации. Иногда можешь попросить человека продолжить мысль, если не совсем понял его. Будь проще, не заставляй человека очень нервничать. (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!) Вот лог переписки и последнее сообщение, ответь ТОЛЬКО НА ПОСЛЕДНЕЕ СООБЩЕНИЕ: " + logs)
+            f.write(ai_message.choices[0].message.content + "\n\n")
         await bot.send_message(message.from_user.id, ai_message.choices[0].message.content)
 
 if __name__ == "__main__":
