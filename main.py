@@ -17,7 +17,6 @@ openai.api_key = os.environ.get("OPENAI_API_KEY", default=None)
 bot = Bot(bot_api_key)
 dp = Dispatcher(bot)
 
-
 @dp.message_handler(commands=['delete'])
 async def process_start_command(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'w') as f:
@@ -44,14 +43,14 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler()
 async def respond(message : types.Message):
-    if message.text == '/delete' or mesage.text == '/download' or message.text == '/specialist':
-        return 1
+    if message.text.startswith('/'):
+            return False
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         f.write(message.text + "\n\n")
 
     with open("./logs/" + str(message.from_user.id), 'r') as f:
         logs = ""
-        for line in (f.readlines()[-10:]):
+        for line in (f.readlines()[-15:]):
             logs += line
 
     with open("./logs/" + str(message.from_user.id), 'a') as f:
