@@ -22,7 +22,7 @@ async def generate_response(prompt):
 class CommandProcessingState(StatesGroup):
     processing = State()  # This state represents that a command is being processed
 
-@dp.message_handler(Command(['delete', 'download', 'specialist', 'start']))
+@dp.message_handler(commands=['delete', 'download', 'specialist', 'start'])
 async def process_command(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data.processing = True  # Set the processing flag
