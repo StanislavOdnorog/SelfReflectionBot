@@ -45,17 +45,18 @@ async def process_start_command(message: types.Message):
 async def process_other_messages(message: types.Message):
     if message.author.bot:
         return
-    if message.text.contains("/"):
+    if message.text.contains('/'):
         return
   
     with open("./logs/" + str(message.from_user.id), 'a') as f:
-        if message.text not in commands:
+        if not message.text.startswith('/'):
             f.write(message.text + "\n\n")
         
     with open("./logs/" + str(message.from_user.id), 'r') as f:
         logs = ""
         for line in (f.readlines()[-15:]):
-            logs += line
+            if not line[0] == '/':
+                logs += line
             
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         ai_message = await generate_response("НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!! Поддержи человека в любой ситуации не используя формальные термины. Будь как друг, но не отклоняйся от темы помощи (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!). Ты мужчина. Помогай советуй и поддерживай, а не отправляй к специалисту в любой ситуации. Иногда можешь попросить человека продолжить мысль, если не совсем понял его. Будь проще, не заставляй человека очень нервничать. (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!) Вот лог переписки и последнее сообщение, ответь ТОЛЬКО НА ПОСЛЕДНЕЕ СООБЩЕНИЕ: " + logs)
