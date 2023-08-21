@@ -16,6 +16,20 @@ openai.api_key = os.environ.get("OPENAI_API_KEY", default=None)
 bot = Bot(bot_api_key)
 dp = Dispatcher(bot)
 
+
+@dp.message_handler(commands=['delete'])
+async def process_start_command(message: types.Message):
+    with open("./logs/" + str(message.from_user.id), 'w') as f:
+        f.write(" ")
+        await bot.send_message(message.from_user.id, "Все сообщения были успешно удалены из базы!")
+
+@dp.message_handler(commands=['download'])
+async def process_start_command(message: types.Message):
+    with open("./logs/" + str(message.from_user.id), 'rb') as f:
+        await message.reply_document(doc)
+        await bot.send_message(message.from_user.id, "Лог переписки направлен!")
+
+
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'a') as f:
