@@ -44,6 +44,8 @@ async def process_start_command(message: types.Message):
 
 @dp.message_handler()
 async def respond(message : types.Message):
+    if message.text == '/delete' or mesage.text == '/download' or message.text == '/specialist':
+        return 1
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         f.write(message.text + "\n\n")
 
