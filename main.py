@@ -41,7 +41,7 @@ async def process_start_command(message: types.Message):
         await bot.send_message(message.from_user.id, start_message)
 
 @dp.message_handler()
-async def process_other_messages(lambda message: not message.text.startswith('/')):
+async def process_other_messages(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         f.write(message.text + "\n\n")
     with open("./logs/" + str(message.from_user.id), 'r') as f:
