@@ -4,6 +4,7 @@ import asyncio
 from aiogram import Dispatcher, Bot, types
 import openai
 from aiogram.utils import executor
+from aiogram.types import InputFile
 
 async def generate_response(prompt):
     chat_completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
@@ -26,7 +27,8 @@ async def process_start_command(message: types.Message):
 @dp.message_handler(commands=['download'])
 async def process_start_command(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'rb') as f:
-        await message.reply_document(doc)
+        path = "./logs/" + str(message.from_user.id)
+        await message.answer_document(InputFile(path))
         await bot.send_message(message.from_user.id, "Лог переписки направлен!")
 
 
