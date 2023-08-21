@@ -17,7 +17,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY", default=None)
 bot = Bot(bot_api_key)
 dp = Dispatcher(bot)
 
-commands = ['start', 'delete', 'download', 'specialist']
+commands = ['/start', '/delete', '/download', '/specialist']
 
 @dp.message_handler(commands=['delete'])
 async def process_delete_command(message: types.Message):
@@ -27,10 +27,9 @@ async def process_delete_command(message: types.Message):
 
 @dp.message_handler(commands=['download'])
 async def process_download_command(message: types.Message):
-    with open("./logs/" + str(message.from_user.id), 'rb') as f:
-        path = "./logs/" + str(message.from_user.id)
-        await message.answer_document(InputFile(path))
-        await bot.send_message(message.from_user.id, "Лог переписки направлен!")
+    path = "./logs/" + str(message.from_user.id)
+    await message.answer_document(InputFile(path))
+    await bot.send_message(message.from_user.id, "Лог переписки направлен!")
 
 @dp.message_handler(commands=['specialist'])
 async def process_specialist_command(message: types.Message):
@@ -50,7 +49,8 @@ async def process_other_messages(message: types.Message):
         return
   
     with open("./logs/" + str(message.from_user.id), 'a') as f:
-        f.write(message.text + "\n\n")
+        if message.text not in commands:
+            f.write(message.text + "\n\n")
         
     with open("./logs/" + str(message.from_user.id), 'r') as f:
         logs = ""
