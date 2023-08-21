@@ -43,15 +43,17 @@ async def process_start_command(message: types.Message):
 @dp.message_handler()
 async def process_other_messages(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'a') as f:
-        f.write(message.text + "\n\n")
+        if not message.text.contains('/'):
+            f.write(message.text + "\n\n")
     with open("./logs/" + str(message.from_user.id), 'r') as f:
         logs = ""
         for line in (f.readlines()[-15:]):
             logs += line
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         ai_message = await generate_response("НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!! Поддержи человека в любой ситуации не используя формальные термины. Будь как друг, но не отклоняйся от темы помощи (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!). Ты мужчина. Помогай советуй и поддерживай, а не отправляй к специалисту в любой ситуации. Иногда можешь попросить человека продолжить мысль, если не совсем понял его. Будь проще, не заставляй человека очень нервничать. (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!) Вот лог переписки и последнее сообщение, ответь ТОЛЬКО НА ПОСЛЕДНЕЕ СООБЩЕНИЕ: " + logs)
-        f.write(ai_message.choices[0].message.content + "\n\n")    
-    await bot.send_message(message.from_user.id, ai_message.choices[0].message.content)
+        if not message.text.contains('/'):
+            f.write(ai_message.choices[0].message.content + "\n\n")    
+            await bot.send_message(message.from_user.id, ai_message.choices[0].message.content)
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates = True)
