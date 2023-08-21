@@ -39,7 +39,6 @@ async def process_start_command(message: types.Message):
     with open("./logs/" + str(message.from_user.id), 'a') as f:
         start_message = "Здравствуйте!\n\nВся переписка здесь останется строго между нами. Не стесняйтесь в выражениях и проявлении эмоций!"
         await bot.send_message(message.from_user.id, start_message)
-        f.write(start_message + "\n")
 
 @dp.message_handler()
 async def respond(message : types.Message):
@@ -54,6 +53,8 @@ async def respond(message : types.Message):
             ai_message = await generate_response("НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!! Поддержи человека в любой ситуации не используя формальные термины. Будь как друг, но не отклоняйся от темы помощи (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!). Ты мужчина. Помогай советуй и поддерживай, а не отправляй к специалисту в любой ситуации. Иногда можешь попросить человека продолжить мысль, если не совсем понял его. Будь проще, не заставляй человека очень нервничать. (НЕЛЬЗЯ ПИСАТЬ ОТВЕТ БОЛЬШЕ 20-30 СЛОВ!!!) Вот лог переписки и последнее сообщение, ответь ТОЛЬКО НА ПОСЛЕДНЕЕ СООБЩЕНИЕ: " + logs)
             f.write(ai_message.choices[0].message.content + "\n\n")    
         await bot.send_message(message.from_user.id, ai_message.choices[0].message.content)
+    else:
+        return False
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates = True)
