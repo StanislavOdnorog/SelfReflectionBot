@@ -31,6 +31,9 @@ async def process_start_command(message: types.Message):
         await message.answer_document(InputFile(path))
         await bot.send_message(message.from_user.id, "Лог переписки направлен!")
 
+@dp.message_handler(commands=['specialist'])
+async def process_start_command(message: types.Message):
+    await bot.send_message(message.from_user.id, "Обратись к специалистам сервисов yasno.live, bemeta.co, green-mirt.ru, alter.ru, специалистам других сервисов или по номеру телефона доверия: +78002000122\n Скачай переписку с помощью '/download' и дай специалисту с ней ознакомиться")
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
