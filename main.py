@@ -50,7 +50,7 @@ async def process_other_messages(message: types.Message):
         
     with open("./logs/" + str(message.from_user.id), 'r') as f:
         logs = ""
-        for line in (f.readlines()[-7:]):
+        for line in (f.readlines()[-10:]):
             if not line[0] == '/':
                 logs += line
             
